@@ -41,6 +41,7 @@ wss.on('connection', (ws) => {
   ws.on('message', (raw) => {
     let msg; try { msg = JSON.parse(raw); } catch (e) { return; }
     const t = msg.type;
+
     if (t === 'create-room') {
       const code = genCode();
       ws.roomCode = code;
@@ -65,20 +66,18 @@ wss.on('connection', (ws) => {
       const room = rooms.get(ws.roomCode);
       if (!room || room.hostId !== ws.id) return;
       room.gameStarted = true;
-      broadcast(room, { type: 'game-started' });
+      broadcast(room, { type: 'game-started', state: msg.state || null });
       return;
     }
-    if (t === 'player-move' || t === 'ghost-move' || t === 'evidence' || t === 'event' || t === 'chat') {
-      const room = rooms.get(ws.roomCode);
-      if (!room) return;
-      if (t === 'chat') {
-        const p = room.players.find(x => x.id === ws.id);
-        msg.name = p ? p.name : 'Player';
-        broadcast(room, msg);
-      } else {
-        broadcast(room, Object.assign({ id: ws.id }, msg), ws.id);
-      }
+
+    // Relays any other messages to other players
+    const room = rooms.get(ws.roomCode);
+    if (!room) return;
+    if (t === 'chat') {
+      const p = room.players.find(x => x.id === ws.id);
+      msg.name = p ? p.name : 'Player';
     }
+    broadcast(room, Object.assign({ id: ws.id }, msg), ws.id);
   });
   ws.on('close', () => {
     const room = rooms.get(ws.roomCode);
