@@ -257,8 +257,7 @@ canvas{display:block;position:fixed;inset:0;cursor:crosshair}
     <div id="howto" style="display:none" class="r">
       <b>J</b> — журнал · <b>T</b> — задачи · <b>L</b> — свет · <b>E</b> — взять · <b>F</b> — проверить<br>
       <b>K</b> — карта · <b>C</b> — камера · <b>V</b> — выкл · <b>Shift</b> — бег<br>
-      <b>F10</b> или <b>Ctrl+Shift+C</b> — читы (ключ: PHASMO-VIP-2026)<br>
-      <b>Проклятые предметы:</b> подойдите и нажмите F. Карты таро = колода из 10 карт.
+      <b>F10</b> или <b>Ctrl+Shift+C</b> — читы (ключ: PHASMO-VIP-2026)
     </div>
     <div class="menu-actions">
       <div class="menu-row">
@@ -297,7 +296,7 @@ canvas{display:block;position:fixed;inset:0;cursor:crosshair}
     <div class="jr-top"><h2>📖 ЖУРНАЛ</h2><button class="jr-close" id="jrClose">✕ ЗАКРЫТЬ (J)</button></div>
     <div class="jr-tabs"><div class="jr-tab on" data-page="ev">Улики</div><div class="jr-tab" data-page="ghosts">Призраки</div><div class="jr-tab" data-page="obj">Задачи</div><div class="jr-tab" data-page="info">Общее</div></div>
     <div class="jr-page on" id="jrPageEv">
-      <div class="jr-left"><div class="jr-h">УЛИКИ</div><div id="jrEvList"></div><div class="jr-h" style="margin-top:14px">ВАШ ОТВЕТ</div><div id="jrGuess" class="jr-guess">Не выбран</div><div class="jr-hint">Клик по улике: ✓ есть → ✗ нет → сброс<br>Клик по призраку = ваш ответ</div></div>
+      <div class="jr-left"><div class="jr-h">УЛИКИ</div><div id="jrEvList"></div><div class="jr-h" style="margin-top:14px">ВАШ ОТВЕТ</div><div id="jrGuess" class="jr-guess">Не выбран</div><div class="jr-hint">Клик по улике: ✓ → ✗ → сброс<br>Клик по призраку = ваш ответ</div></div>
       <div class="jr-center"><div class="jr-h">ПРИЗРАКИ · возможных: <span id="jrPossible">30</span></div><div id="jrGrid" class="jr-ghost-grid"></div></div>
     </div>
     <div class="jr-page" id="jrPageGhosts"><div class="jr-left"><div class="jr-h">ВСЕ ПРИЗРАКИ</div><div id="jrGhostFullList"></div></div><div class="jr-center"><div class="jr-h">ИНФОРМАЦИЯ</div><div id="jrGhostDetail"><div class="ghost-card-empty">👻<br><br>Кликните призрака слева</div></div></div></div>
@@ -343,7 +342,6 @@ var EFF={};
 function computeEffectiveStats(){EFF.emfRange=statOf('emf','range',200);EFF.boxRange=statOf('box','range',200);EFF.crucifixRadius=statOf('crucifix','radius',CRUCIFIX_RADIUS);EFF.smudgeDuration=statOf('smudge','duration',SMUDGE_DURATION);EFF.dotsRadius=statOf('dots','radius',DOTS_RADIUS);EFF.motionRadius=statOf('motion','radius',MOTION_RADIUS);EFF.soundRadius=statOf('sound','radius',SOUND_RADIUS);EFF.cameraRadius=statOf('camera','radius',CAMERA_RADIUS);EFF.pillsRestore=statOf('pills','restore',40);EFF.uvDuration=statOf('uv','duration',15);EFF.bookWriteSpeed=statOf('book','writeSpeed',4);EFF.thermoInterval=statOf('thermo','updateInterval',5);}
 computeEffectiveStats();
 
-/* ===== ДАННЫЕ ПРИЗРАКОВ ===== */
 var GHOSTS=[
 {n:'Spirit',rus:'Дух',ev:['emf','box','book'],ab:'none',spd:1.0,hs:1.0,d:'Ровный',desc:'Обычный призрак.',str:'Предсказуемый.',weak:'Благовония дольше.',tips:'Ровный.',color:'#c0e0ff'},
 {n:'Wraith',rus:'Призрак',ev:['emf','box','dots'],ab:'tp',spd:1.0,hs:1.05,d:'Телепорт',desc:'Телепорт.',str:'Телепорт.',weak:'Соль не работает.',tips:'Соль.',color:'#a0c0ff'},
@@ -383,7 +381,6 @@ var TASK_TYPES=[{k:'place_motion',n:'Датчик движения',icon:'🔴',
 var SECTION_LABELS={place:'📦 Установить',check:'🔍 Проверить',go:'📍 Навигация'};
 function getTaskByKey(k){for(var i=0;i<TASK_TYPES.length;i++)if(TASK_TYPES[i].k===k)return TASK_TYPES[i];return null;}
 
-/* ===== ТАРО 10 КАРТ ===== */
 var TAROT_CARDS=[
 {k:'tower',n:'Башня',icon:'🗼',desc:'Перезапускает охоту',effect:function(p){if(gh.hunt){gh.huntT=HUNT_DURATION;gh.preHunt=0;gh.huntAct=true;}shake=20;}},
 {k:'wheel',n:'Колесо',icon:'🎡',desc:'±50% рассудка',effect:function(p){if(Math.random()<0.5)p.san=Math.min(100,p.san+50);else p.san=Math.max(0,p.san-50);}},
@@ -396,7 +393,6 @@ var TAROT_CARDS=[
 {k:'devil',n:'Дьявол',icon:'😈',desc:'Призрак в ярости',effect:function(p){gh.ess=100;gh.huntCd=0;gh.man=true;}},
 {k:'fool',n:'Шут',icon:'🃏',desc:'Случайная карта',effect:function(p){var o=TAROT_CARDS.filter(function(c){return c.k!=='fool';});var rc=o[Math.floor(Math.random()*o.length)];showTarotOverlay(rc);setTimeout(function(){try{rc.effect(p);}catch(e){}},1500);}}];
 
-/* ===== КОМНАТЫ ===== */
 var ROOMS=[
 {n:'Кухня',x1:7,y1:1,x2:17,y2:7},{n:'Спальня',x1:19,y1:1,x2:29,y2:7},{n:'Ванная',x1:31,y1:1,x2:40,y2:7},
 {n:'Гостиная',x1:7,y1:9,x2:17,y2:15},{n:'Холл',x1:19,y1:9,x2:29,y2:15},{n:'Кабинет',x1:31,y1:9,x2:40,y2:15},
@@ -410,7 +406,6 @@ var PROP_TYPES=['vase','chair','book','box','bottle','can'];
 var EQUIP_TYPES=[{k:'emf',n:'ЭМП-5'},{k:'box',n:'Спирит-бокс'},{k:'book',n:'Книга'},{k:'uv',n:'УФ-фонарь'},{k:'camera',n:'Видеокамера'},{k:'thermo',n:'Термометр'},{k:'dots',n:'D.O.T.S.'},{k:'crucifix',n:'Распятие'},{k:'smudge',n:'Благовония'},{k:'pills',n:'Таблетки'},{k:'motion',n:'Датчик движения'},{k:'sound',n:'Датчик звука'}];
 var CURSED_TYPES=[{k:'musicbox',n:'Шкатулка',icon:'🎵',uses:1,sanity:20},{k:'mirror',n:'Зеркало',icon:'🪞',uses:1,sanity:50},{k:'voodoo',n:'Кукла вуду',icon:'🪆',uses:3,sanity:10},{k:'circle',n:'Круг призыва',icon:'🔮',uses:1,sanity:30},{k:'tarot',n:'Карты таро',icon:'🎴',uses:10,sanity:0}];
 
-/* ===== СОСТОЯНИЕ ===== */
 var gameMode='ghost',mapOpen=false,viewingCamera=null,tutorialMode=false;
 var selectedGhost=null,evidenceCount=3;
 var journalOpen=false,journalPage='ev',playerGhostGuess=null,playerCrossedGhosts=new Set();
@@ -431,7 +426,6 @@ var ais=[],camX=0,camY=0,AC=null;
 var gh={x:0,y:0,r:15,type:null,room:0,ess:100,maxEss:100,man:false,hunt:false,huntT:0,preHunt:0,huntAct:false,huntCd:0,kill:0,esc:0,lastInteract:0,smudgeUntil:0,hermitUntil:0,aiTargetX:0,aiTargetY:0,aiT:0,aiPath:null,aiPi:0,movedTimer:0,movedRecently:false,interactCd:5,sinceLastResponse:0,_yureiCd:0,_twinCd:0,activeEv:[],bansheeTarget:0,dayanSpeed:1,galluState:0,galluTimer:0,thayeSlow:0,deildegastThrows:0,eventCd:0};
 var playerInv={carrying:null,inspecting:null,invT:0,hiding:false,hideSpot:null,stamina:100,running:false,carriedThermo:null};
 
-/* ===== ЧИТЫ ===== */
 var CHEAT_KEY='PHASMO-VIP-2026';
 var cheats={unlocked:false,god:false,reveal:false,noHunt:false,speed:false,ghostLock:false};
 function cheatsActive(){return cheats.god||cheats.reveal||cheats.noHunt||cheats.speed||cheats.ghostLock;}
@@ -479,7 +473,11 @@ function showMultiplayerMenu(mode){
   document.getElementById('mpCreateBtn').onclick=function(){var name=prompt('Ваше имя:','Хост')||'Хост';netConnect(function(){netSend('create-room',{mode:mode,name:name});});};
   document.getElementById('mpJoinBtn').onclick=function(){var code=prompt('Код комнаты:');if(!code)return;var name=prompt('Ваше имя:','Игрок')||'Игрок';netConnect(function(){netSend('join-room',{code:code.toUpperCase(),name:name});});};
 }
-function closeLobby(){var p=document.getElementById('lobbyPanel');if(p)p.classList.add('off');if(net.ws){try{net.ws.close();}catch(e){}}net.ws=null;net.connected=false;net.roomCode='';net.myId='';net.isHost=false;net.players=[];net.remotePlayers={};net.remoteGhost=null;net.remoteAI={};net.gameStarted=false;}
+
+/* === КРИТИЧЕСКИЙ ФИКС: разделены hideLobby и leaveRoom === */
+function hideLobby(){var p=document.getElementById('lobbyPanel');if(p)p.classList.add('off');}
+function leaveRoom(){var p=document.getElementById('lobbyPanel');if(p)p.classList.add('off');if(net.ws){try{net.ws.close();}catch(e){}}net.ws=null;net.connected=false;net.roomCode='';net.myId='';net.isHost=false;net.players=[];net.remotePlayers={};net.remoteGhost=null;net.remoteAI={};net.gameStarted=false;net.mode=null;}
+
 function renderLobby(){
   var c2=document.getElementById('lobbyContent');if(!c2)return;
   if(!net.connected||!net.roomCode){c2.innerHTML='<div style="text-align:center;padding:30px;color:#a89ec8">Подключение...</div>';return;}
@@ -521,8 +519,10 @@ function applyCriticalState(state){
   if(state.cursed){for(var j=0;j<cursedItems.length&&j<state.cursed.length;j++){var sc=state.cursed[j];cursedItems[j].k=sc.k;cursedItems[j].x=sc.x;cursedItems[j].y=sc.y;for(var ri=0;ri<ROOMS.length;ri++){if(ROOMS[ri].n===sc.roomName){cursedItems[j].room=ROOMS[ri];break;}}if(sc.k==='tarot'){cursedItems[j].deck=sc.deck?sc.deck.slice():TAROT_CARDS.map(function(c){return c.k;});cursedItems[j].usesLeft=cursedItems[j].deck.length;cursedItems[j].used=false;}else{cursedItems[j].usesLeft=sc.usesLeft;}}}
   if(state.spots){for(var k=0;k<spots.length&&k<state.spots.length;k++){spots[k].x=state.spots[k].x;spots[k].y=state.spots[k].y;spots[k].type=state.spots[k].type;}}
 }
+
+/* === ФИКС: hideLobby вместо closeLobby — WS остаётся открытым === */
 function startMultiplayerGameHost(){
-  closeLobby();
+  hideLobby();
   var menu=document.getElementById('menu');if(menu)menu.classList.add('off');
   var hud=document.getElementById('hud');if(hud)hud.classList.add('on');
   phase='investigation';phaseTimer=0;graceTimer=45;tutorialMode=false;hideTutHud();
@@ -532,7 +532,7 @@ function startMultiplayerGameHost(){
   else{var lb2=document.getElementById('leaveBtn');if(lb2)lb2.classList.add('on');toast('🔦 Вы искатель');}
 }
 function startMultiplayerGameClient(state){
-  closeLobby();
+  hideLobby();
   var menu=document.getElementById('menu');if(menu)menu.classList.add('off');
   var hud=document.getElementById('hud');if(hud)hud.classList.add('on');
   gameMode='investigator';
@@ -664,7 +664,6 @@ function performCheck(a,dev){var k=EQUIP_TO_EV[dev.k];if(!k){toast('📋 #'+a.id
 function finishTask(a,success){var wasTask=a.assignedTask;if(wasTask&&wasTask.check&&wasTask.targetDevice&&wasTask.targetDevice.claimBy===a.id)wasTask.targetDevice.claimBy=null;a.assignedTask=null;a.taskStuckT=0;a.taskCheckT=0;a.state='wander';a.path=null;a.pt=0;a.pi=0;a.goal=null;}
 function updateTaskedAI(a,dt){var task=a.assignedTask;if(!task){finishTask(a,false);return;}if(task.type==='go_to'){if(Math.hypot(a.x-task.x,a.y-task.y)<40){finishTask(a,true);return;}navigateTo(a,task.x,task.y,dt);return;}if(task.check){var dev=task.targetDevice;if(!dev||!dev.placed||dev.carrier){finishTask(a,false);return;}if(Math.hypot(a.x-dev.x,a.y-dev.y)<40){a.taskCheckT=(a.taskCheckT||0)+dt;a.path=null;a.pt=0;if(a.taskCheckT>TASK_CHECK_TIME){performCheck(a,dev);finishTask(a,true);}}else{a.taskCheckT=0;navigateTo(a,dev.x,dev.y,dt);}return;}}
 
-/* ===== AI ===== */
 function aiCommonUpdate(a,dt){
   if(a.state==='idle_tutorial'||!isFinite(dt)||dt<=0)return;
   if(unstickFromWall(a)){a.path=null;a.pi=0;a.pt=0;}
@@ -701,7 +700,6 @@ function aiCommonUpdate(a,dt){
   if(a.san<40&&!a.usePills&&a.lastPillT<=0){for(var pl=0;pl<equip.length;pl++){var epl=equip[pl];if(epl.k!=='pills'||!epl.placed||epl.cd>0)continue;if(Math.hypot(epl.x-a.x,epl.y-a.y)<50){a.usePills=true;a.lastPillT=90;epl.cd=60;a.san=Math.min(100,a.san+EFF.pillsRestore);break;}}}
 }
 
-/* ===== ОБНОВЛЕНИЕ ===== */
 function updGhostFull(dt){
   var frozen=(gh.hunt&&gh.preHunt>0)||(gh.hermitUntil>0&&gameTime<gh.hermitUntil)||cheats.ghostLock;
   var smudged=gh.smudgeUntil>0;
@@ -788,7 +786,6 @@ function updInvestigatorsFull(dt){
 
 function updPlayerInspect(dt){var p=ais[0];if(!p||p.state==='dead')return;var e=playerInv.inspecting;if(!e)return;if(Math.hypot(e.x-p.x,e.y-p.y)>60){playerInv.inspecting=null;playerInv.invT=0;return;}playerInv.invT+=dt;if(playerInv.invT>2.5){playerInv.invT=0;var k=EQUIP_TO_EV[e.k],sig=checkSignal(e);if(sig&&k){if(collectedEvidence.indexOf(k)<0){collectedEvidence.push(k);var evN='';for(var j=0;j<EVIDENCE_LIST.length;j++)if(EVIDENCE_LIST[j].k===k)evN=EVIDENCE_LIST[j].n;toast('🔍 '+evN);if(net.gameStarted)netSend('evidence',{k:k});if(journalOpen){refreshEvIcons();refreshGhostGrid();}}else toast('✅');updEvPanel();}else toast('❌ '+e.n+': '+noSignalReason(e));playerInv.inspecting=null;if(tutorialMode)tutorialCheckedItem=true;}}
 
-/* ===== HUD ===== */
 function updContextUI(){var ctxEl=document.getElementById('ctx');if(!ctxEl)return;if(mapOpen||evacuating||journalOpen||phase==='setup'){ctxEl.classList.remove('on');return;}var txt='';if(gameMode==='ghost'){var best=null,bd=70;for(var i=0;i<equip.length;i++){var e=equip[i];if(!e.placed)continue;var d=Math.hypot(e.x-gh.x,e.y-gh.y);if(d<bd){bd=d;best=e;}}if(best){var ev=EQUIP_TO_EV[best.k];if(!ev)txt='<b>'+best.n+'</b>';else if(!ghostHasEvidence(ev))txt='<b>'+best.n+'</b> — не тип';else txt='<b>'+best.n+'</b>';}}else{var p=ais[0];if(!p){ctxEl.classList.remove('on');return;}if(viewingCamera)txt='📹 C/V';else if(playerInv.hiding)txt='<b>E</b> — выйти';else if(playerInv.inspecting)txt='Проверка '+Math.round(playerInv.invT/2.5*100)+'%';else if(playerInv.carrying)txt='<b>E</b> — поставить';else if(pendingTaskType)txt='📋 клик AI';else{var nearCursed=null,bdC=60;for(var cci=0;cci<cursedItems.length;cci++){var ci2=cursedItems[cci];if(ci2.used)continue;var dci=Math.hypot(ci2.x-p.x,ci2.y-p.y);if(dci<bdC){bdC=dci;nearCursed=ci2;}}if(nearCursed){if(nearCursed.k==='tarot')txt='🎴 <b>F</b> — Карты таро ('+(nearCursed.deck?nearCursed.deck.length:0)+'/10)';else txt='<b>F</b> — '+nearCursed.n;}else{var dB=Math.hypot(p.x-BREAKER_POS.x,p.y-BREAKER_POS.y);if(dB<50)txt='<b>E</b> — '+(breakerOn?'выкл':'вкл')+' щиток';else{var nearEqLying=null,bdL=40;for(var q=0;q<equip.length;q++){var eq=equip[q];if(eq.placed||eq.carrier)continue;var d2=Math.hypot(eq.x-p.x,eq.y-p.y);if(d2<bdL){bdL=d2;nearEqLying=eq;}}var nearEqPlaced=null,bdP=50;for(var q2=0;q2<equip.length;q2++){var eq2=equip[q2];if(!eq2.placed||eq2.carrier)continue;var d3=Math.hypot(eq2.x-p.x,eq2.y-p.y);if(d3<bdP){bdP=d3;nearEqPlaced=eq2;}}if(nearEqLying)txt='<b>E</b> — взять '+nearEqLying.n;else if(nearEqPlaced)txt='<b>F</b> — проверить '+nearEqPlaced.n;}}}}if(txt){ctxEl.innerHTML=txt;ctxEl.classList.add('on');}else ctxEl.classList.remove('on');}
 function updBar(){var barF=document.getElementById('barF'),barN=document.getElementById('barN'),p1lbl=document.getElementById('p1lbl');if(!barF||!barN)return;var s=100;if(gameMode==='ghost'){var min=100;for(var i=0;i<ais.length;i++){var a=ais[i];if(a.state!=='dead'&&a.state!=='escaped'&&a.san<min)min=a.san;}s=min;if(p1lbl)p1lbl.textContent='Рассудок (мин.)';}else{var p=ais[0];s=p?p.san:100;if(p1lbl)p1lbl.textContent='Рассудок';}barF.style.width=s+'%';barN.textContent=Math.round(s)+' / 100';}
 function updInfo(){var infoList=document.getElementById('infoList');if(!infoList)return;var html='';for(var i=0;i<ais.length;i++){var a=ais[i];if(a.state==='idle_tutorial')continue;var st='???';if(a.state==='dead')st='мёртв';else if(a.state==='escaped')st='сбежал';else if(a.state==='leave')st='🚐';else if(a.state==='tasked')st='📋';else if(a.state==='hide')st='прячется';else if(a.state==='flee')st='паника';else if(a.carrying)st='несёт '+a.carrying.n;else if(!a.leftVan)st='в фургоне';else st='патруль';if(a.isPlayer&&a.state!=='dead'){if(mapOpen)st='🗺';else if(viewingCamera)st='📹';else if(playerInv.hiding)st='ПРЯЧУСЬ';else if(playerInv.carrying)st='несёт '+playerInv.carrying.n;else st='ВЫ';}html+='<div class="tm '+(a.state==='dead'?'dead':'')+' '+(a.isPlayer?'player':'')+'"><span class="nm">'+(a.isPlayer?'★ ':'#'+a.id+' ')+st+'</span><div class="sanbar"><div style="width:'+a.san+'%"></div></div></div>';}infoList.innerHTML=html;}
@@ -832,9 +829,8 @@ function endLeaveHold(){if(!leaveHolding)return;leaveHolding=false;document.getE
 function updateLeaveHold(){if(!leaveHolding||evacuating)return;var el=gameTime-leaveHoldStart,pct=Math.min(100,el/LEAVE_HOLD_TIME*100);document.getElementById('leaveProg').style.width=pct+'%';var left=Math.max(0,Math.ceil(LEAVE_HOLD_TIME-el));document.getElementById('leaveText').textContent='ЭВАК... '+left+'с';if(el>=LEAVE_HOLD_TIME){leaveHolding=false;document.getElementById('leaveBtn').classList.remove('holding');triggerEvacuation();}}
 function triggerEvacuation(){if(evacuating)return;evacuating=true;closeTaskPanel();if(journalOpen)toggleJournal();toast('🚐 ЭВАКУАЦИЯ!');shake=12;for(var i=0;i<ais.length;i++){var a=ais[i];if(a.state==='dead'||a.state==='escaped')continue;if(a.isPlayer)continue;if(a.hs){a.hs.occ=false;a.hs=null;}clearAssignedTask(a);a.state='leave';a.path=null;a.pt=0;a.pi=0;a.goal=null;}var p=ais[0];if(p&&p.state!=='dead'&&p.state!=='escaped'){if(playerInv.hiding){playerInv.hiding=false;if(playerInv.hideSpot){playerInv.hideSpot.occ=false;playerInv.hideSpot=null;}}p.state='leave';}}
 
-/* ===== ТУТОРИАЛ ===== */
-var TUT_STEPS_INV=[{id:'i-intro',text:'🔦 Добро пожаловать!',sub:'WASD · Shift · E · F',check:function(){return gameTime-tutStartTime>4;}},{id:'i-take',text:'1. Возьмите ЭМП-5',sub:'Подойдите и E',check:function(){return tutorialTookItem;}},{id:'i-enter',text:'2. Войдите в дом',sub:'WASD',check:function(){var p=ais[0];if(!p)return false;return !!roomAt(p.x,p.y);}},{id:'i-place',text:'3. Поставьте ЭМП-5',sub:ROOMS[gh.room].n,check:function(){return equip.some(function(e){return e.k==='emf'&&e.placed&&!e.carrier&&isInRoom(e.x,e.y,ROOMS[gh.room]);});}},{id:'i-check',text:'4. Проверьте (F)',sub:'2.5 сек',check:function(){return tutorialCheckedItem;}},{id:'i-journal',text:'5. Журнал (J)',sub:'Улики',check:function(){return tutorialOpenedJournal;}},{id:'i-done',text:'✅ Готово!',sub:'Найдите призрака',check:function(){return gameTime-tutStartTime>20;}}];
-var TUT_STEPS_GHOST=[{id:'g-intro',text:'👻 Привет, Призрак!',sub:ROOMS[gh.room].n,check:function(){return gameTime-tutStartTime>3;}},{id:'g-move',text:'1. WASD',sub:'Подвигайтесь',check:function(){return tutorialMoved;}},{id:'g-manifest',text:'2. ПРОБЕЛ',sub:'Манифест',check:function(){return tutorialManifested;}},{id:'g-throw',text:'3. ЛКМ',sub:'Бросок',check:function(){return tutorialThrown;}},{id:'g-interact',text:'4. E',sub:'Прибор',check:function(){return tutorialInteracted;}},{id:'g-event',text:'5. Q',sub:'Событие',check:function(){return tutorialEventFired;}},{id:'g-hunt',text:'6. R',sub:'Охота',check:function(){return tutorialStartedHunt;}},{id:'g-done',text:'✅ Готово!',sub:'',check:function(){return gameTime-tutStartTime>16;}}];
+var TUT_STEPS_INV=[{id:'i-intro',text:'🔦 Добро пожаловать!',sub:'WASD · Shift · E · F',check:function(){return gameTime-tutStartTime>4;}},{id:'i-take',text:'1. Возьмите ЭМП-5',sub:'Подойдите и E',check:function(){return tutorialTookItem;}},{id:'i-enter',text:'2. Войдите в дом',sub:'WASD',check:function(){var p=ais[0];if(!p)return false;return !!roomAt(p.x,p.y);}},{id:'i-place',text:'3. Поставьте ЭМП-5',sub:ROOMS[gh.room].n,check:function(){return equip.some(function(e){return e.k==='emf'&&e.placed&&!e.carrier&&isInRoom(e.x,e.y,ROOMS[gh.room]);});}},{id:'i-check',text:'4. Проверьте (F)',sub:'2.5 сек',check:function(){return tutorialCheckedItem;}},{id:'i-journal',text:'5. Журнал (J)',sub:'Улики',check:function(){return tutorialOpenedJournal;}},{id:'i-done',text:'✅ Готово!',sub:'',check:function(){return gameTime-tutStartTime>20;}}];
+var TUT_STEPS_GHOST=[{id:'g-intro',text:'👻 Привет, Призрак!',sub:ROOMS[gh.room].n,check:function(){return gameTime-tutStartTime>3;}},{id:'g-move',text:'1. WASD',sub:'',check:function(){return tutorialMoved;}},{id:'g-manifest',text:'2. ПРОБЕЛ',sub:'',check:function(){return tutorialManifested;}},{id:'g-throw',text:'3. ЛКМ',sub:'',check:function(){return tutorialThrown;}},{id:'g-interact',text:'4. E',sub:'',check:function(){return tutorialInteracted;}},{id:'g-event',text:'5. Q',sub:'',check:function(){return tutorialEventFired;}},{id:'g-hunt',text:'6. R',sub:'',check:function(){return tutorialStartedHunt;}},{id:'g-done',text:'✅ Готово!',sub:'',check:function(){return gameTime-tutStartTime>16;}}];
 function initTutorial(){if(gameMode==='ghost'){var r=ROOMS[gh.room],cx=(r.x1+r.x2+1)/2*TILE,cy=(r.y1+r.y2+1)/2*TILE;var tEmf=makeEqItem('emf',cx+80,cy);tEmf.placed=true;equip.push(tEmf);var tBox=makeEqItem('box',cx-80,cy);tBox.placed=true;equip.push(tBox);var tBook=makeEqItem('book',cx,cy+80);tBook.placed=true;equip.push(tBook);props.push({type:'vase',x:gh.x+60,y:gh.y+40,vx:0,vy:0,rot:0,rotV:0,size:11,r:10,thrown:0});props.push({type:'chair',x:gh.x-70,y:gh.y+50,vx:0,vy:0,rot:0,rotV:0,size:14,r:14,thrown:0});}tutIdx=0;TUT_STEPS=(gameMode==='ghost')?TUT_STEPS_GHOST:TUT_STEPS_INV;tutDone=TUT_STEPS.map(function(){return false;});tutStartTime=gameTime;tutStartX=gameMode==='ghost'?gh.x:ais[0].x;tutStartY=gameMode==='ghost'?gh.y:ais[0].y;var a=document.getElementById('tutNum'),b=document.getElementById('tutMax'),c2=document.getElementById('tutHud'),d=document.getElementById('tutSkipBtn');if(a)a.textContent='1';if(b)b.textContent=TUT_STEPS.length;if(c2)c2.classList.add('on');if(d)d.classList.add('on');showTutStep();}
 function hideTutHud(){var a=document.getElementById('tutHud'),b=document.getElementById('tutSkipBtn');if(a)a.classList.remove('on');if(b)b.classList.remove('on');tutorialMode=false;}
 function showTutStep(){var s=TUT_STEPS[tutIdx];if(!s)return;var a=document.getElementById('tutNum'),b=document.getElementById('tutText'),c2=document.getElementById('tutSub'),d=document.getElementById('tutProg');if(a)a.textContent=String(tutIdx+1);if(b)b.textContent=s.text;if(c2)c2.textContent=s.sub;var h='';for(var i=0;i<TUT_STEPS.length;i++)h+='<div class="td '+(tutDone[i]?'done':(i===tutIdx?'on':''))+'"></div>';if(d)d.innerHTML=h;}
@@ -845,7 +841,6 @@ function updateFull(dt){gameTime+=dt;if(phase==='setup'){phaseTimer-=dt;var allP
 function updFXFull(dt){for(var i=effects.length-1;i>=0;i--){var e=effects[i];e.x+=e.vx*dt;e.y+=e.vy*dt;e.vx*=.94;e.vy*=.94;e.life-=dt;if(e.life<=0)effects.splice(i,1);}}
 function loop(t){var dt=Math.min((t-lastT)/1000,.05);lastT=t;try{if(running)updateFull(dt);ctx.fillStyle='#05050a';ctx.fillRect(0,0,W,H);if(running)renderFull();}catch(err){console.error('Loop:',err);}requestAnimationFrame(loop);}
 
-/* ===== РЕНДЕР ===== */
 function shade(hex,amt){var n=parseInt(hex.slice(1),16),r=(n>>16)&0xff,g=(n>>8)&0xff,b=n&0xff;r=Math.max(0,Math.min(255,r+Math.round(255*amt)));g=Math.max(0,Math.min(255,g+Math.round(255*amt)));b=Math.max(0,Math.min(255,b+Math.round(255*amt)));return '#'+((r<<16)|(g<<8)|b).toString(16).padStart(6,'0');}
 function isKitchen(r){return r&&(r.n==='Кухня'||r.n==='Ванная'||r.n==='Ванная №2');}
 function drawFloorTile(px,py,x,y,rm){if(isKitchen(rm)){var light=(x+y)%2===0;var g=ctx.createLinearGradient(px,py,px,py+TILE);if(light){g.addColorStop(0,'#3a3548');g.addColorStop(1,'#2a2538');}else{g.addColorStop(0,'#1e1a26');g.addColorStop(1,'#141018');}ctx.fillStyle=g;ctx.fillRect(px,py,TILE,TILE);ctx.strokeStyle='rgba(10,8,15,.8)';ctx.lineWidth=1.5;ctx.strokeRect(px+.5,py+.5,TILE-1,TILE-1);}else if(rm){var variant=(x*7+y*3)%5;var colors=['#3e2c1c','#42301e','#4a3824','#362414','#322010'];var g2=ctx.createLinearGradient(px,py,px,py+TILE);g2.addColorStop(0,colors[variant]);g2.addColorStop(1,shade(colors[variant],-0.2));ctx.fillStyle=g2;ctx.fillRect(px,py,TILE,TILE);ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillRect(px,py,TILE,2);}else{var g3=ctx.createLinearGradient(px,py,px,py+TILE);g3.addColorStop(0,'#2e2b34');g3.addColorStop(1,'#1a1820');ctx.fillStyle=g3;ctx.fillRect(px,py,TILE,TILE);ctx.strokeStyle='rgba(0,0,0,.4)';ctx.lineWidth=1;ctx.strokeRect(px+.5,py+.5,TILE-1,TILE-1);}}
@@ -888,7 +883,21 @@ function renderFull(){
   for(var pi=0;pi<props.length;pi++){var prop=props[pi];ctx.save();ctx.translate(prop.x,prop.y);ctx.rotate(prop.rot);ctx.fillStyle='rgba(0,0,0,.4)';ctx.beginPath();ctx.ellipse(2,prop.size*.8,prop.size*.9,prop.size*.35,0,0,7);ctx.fill();if(prop.type==='vase'){var vg=ctx.createRadialGradient(-2,-2,1,0,0,prop.size);vg.addColorStop(0,'#b85a4a');vg.addColorStop(1,'#6a2a1a');ctx.fillStyle=vg;ctx.beginPath();ctx.arc(0,0,prop.size*.85,0,7);ctx.fill();}else if(prop.type==='chair'){var chg=ctx.createLinearGradient(-prop.size,-prop.size,prop.size,prop.size);chg.addColorStop(0,'#8a5a2a');chg.addColorStop(1,'#4a2a10');ctx.fillStyle=chg;ctx.fillRect(-prop.size,-prop.size,prop.size*2,prop.size*2);}else{var prg=ctx.createRadialGradient(-2,-2,1,0,0,prop.size);prg.addColorStop(0,'#8888a0');prg.addColorStop(1,'#404058');ctx.fillStyle=prg;ctx.beginPath();ctx.arc(0,0,prop.size*.9,0,7);ctx.fill();}ctx.restore();}
   if(pendingTaskAssignee){var pa=pendingTaskAssignee,pulseA=0.5+Math.sin(gameTime*6)*0.5;ctx.strokeStyle='rgba(255,208,96,'+(0.6+pulseA*0.4)+')';ctx.lineWidth=3;ctx.beginPath();ctx.arc(pa.x,pa.y,pa.r+8,0,7);ctx.stroke();}
   for(var ai=0;ai<ais.length;ai++){var a=ais[ai];if(a.state==='dead'||a.state==='escaped')continue;if(a.isPlayer&&playerInv.hiding)continue;if(a.state==='hide'&&!a.isPlayer)continue;if(a.state==='idle_tutorial'&&!a.isPlayer)continue;var isPlayer=a.isPlayer,x2=a.x,y2=a.y+Math.sin(a.bob)*1.5;var bc='#8090a8',hc='#b0c0d8';if(isPlayer){bc='#4080c0';hc='#80c8ff';}else if(a.state==='leave'){bc='#80ff80';hc='#c0ffc0';}else if(a.state==='tasked'){bc='#c0a040';hc='#ffe080';}else if(a.state==='flee'){bc='#c06060';hc='#e08080';}ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.ellipse(x2+1,y2+11,13,5,0,0,7);ctx.fill();var bg=ctx.createRadialGradient(x2-3,y2-3,2,x2,y2,a.r);bg.addColorStop(0,shade(bc,0.3));bg.addColorStop(1,bc);ctx.fillStyle=bg;ctx.beginPath();ctx.arc(x2,y2,a.r,0,7);ctx.fill();ctx.fillStyle=hc;ctx.beginPath();ctx.arc(x2,y2-2,a.r*.65,0,7);ctx.fill();if(isPlayer){ctx.fillStyle='#ffe060';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText('★',x2,y2-2);}if(Math.hypot(a.x-target.x,a.y-target.y)<200){ctx.fillStyle='#80c8ff';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillText(isPlayer?'Я':'#'+a.id,x2,y2-30);}}
-  for(var rid in net.remotePlayers){var rp=net.remotePlayers[rid],rx=rp.x,ry=rp.y,rname='P';for(var rpi=0;rpi<net.players.length;rpi++)if(net.players[rpi].id===rid){rname=net.players[rpi].name;break;}ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.ellipse(rx+1,ry+11,13,5,0,0,7);ctx.fill();var rbg=ctx.createRadialGradient(rx-3,ry-3,2,rx,ry,8);rbg.addColorStop(0,'#a8f0a8');rbg.addColorStop(1,'#4a9a5a');ctx.fillStyle=rbg;ctx.beginPath();ctx.arc(rx,ry,8,0,7);ctx.fill();ctx.fillStyle='#c8ffc8';ctx.beginPath();ctx.arc(rx,ry-2,5,0,7);ctx.fill();ctx.fillStyle='#a0ffa0';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillText(rname,rx,ry-30);}
+
+  /* === ФИКС: заметный рендер удалённых игроков (зелёный P с белой обводкой) === */
+  for(var rid in net.remotePlayers){
+    var rp=net.remotePlayers[rid],rx=rp.x,ry=rp.y,rname='P';
+    for(var rpi=0;rpi<net.players.length;rpi++)if(net.players[rpi].id===rid){rname=net.players[rpi].name;break;}
+    ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.ellipse(rx+1,ry+13,15,5,0,0,7);ctx.fill();
+    var rbg=ctx.createRadialGradient(rx-4,ry-4,2,rx,ry,12);
+    rbg.addColorStop(0,'#a0ffa0');rbg.addColorStop(1,'#00aa22');
+    ctx.fillStyle=rbg;ctx.beginPath();ctx.arc(rx,ry,12,0,7);ctx.fill();
+    ctx.strokeStyle='#ffffff';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(rx,ry,12,0,7);ctx.stroke();
+    ctx.fillStyle='#ffffff';ctx.beginPath();ctx.arc(rx,ry-2,7,0,7);ctx.fill();
+    ctx.fillStyle='#00aa22';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('P',rx,ry-2);
+    ctx.font='bold 13px sans-serif';ctx.lineWidth=4;ctx.strokeStyle='#000';ctx.strokeText(rname,rx,ry-32);
+    ctx.fillStyle='#80ff80';ctx.fillText(rname,rx,ry-32);
+  }
   if((gameMode==='ghost')||gh.hunt||gh.man||cheats.reveal||(net.gameStarted&&net.remoteGhost&&(net.remoteGhost.man||net.remoteGhost.hunt)))drawGhost();
   ctx.restore();
   var g2=ctx.createRadialGradient(W/2,H/2,180,W/2,H/2,Math.max(W,H)*.75);g2.addColorStop(0,'rgba(0,0,0,0)');g2.addColorStop(1,'rgba(0,0,0,.75)');ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
@@ -897,7 +906,6 @@ function renderFull(){
 function renderCameraFull(cameraEq){var pad=34,vx=pad,vy=pad,vw=W-pad*2,vh=H-pad*2;ctx.fillStyle='#020602';ctx.fillRect(0,0,W,H);ctx.save();ctx.beginPath();ctx.rect(vx,vy,vw,vh);ctx.clip();var cx=cameraEq.x,cy=cameraEq.y,viewSize=EFF.cameraRadius*2,scale=Math.min(vw/viewSize,vh/viewSize);ctx.translate(vx+vw/2,vy+vh/2);ctx.scale(scale,scale);ctx.translate(-cx,-cy);for(var ri=0;ri<ROOMS.length;ri++){var r=ROOMS[ri],rx=r.x1*TILE,ry=r.y1*TILE,rw=(r.x2-r.x1+1)*TILE,rh=(r.y2-r.y1+1)*TILE;if(rx>cx+EFF.cameraRadius||rx+rw<cx-EFF.cameraRadius||ry>cy+EFF.cameraRadius||ry+rh<cy-EFF.cameraRadius)continue;ctx.fillStyle='#0a1f0a';ctx.fillRect(rx,ry,rw,rh);ctx.strokeStyle='#1a4a1a';ctx.lineWidth=2;ctx.strokeRect(rx,ry,rw,rh);ctx.fillStyle='rgba(74,255,74,.4)';ctx.font='bold 16px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(r.n,rx+rw/2,ry+rh/2);}var gd=Math.hypot(gh.x-cx,gh.y-cy);if(gd<EFF.cameraRadius&&(gh.man||gh.hunt||gh.movedRecently)){var a=Math.max(0,1-gd/EFF.cameraRadius);var grad=ctx.createRadialGradient(gh.x,gh.y,0,gh.x,gh.y,50);grad.addColorStop(0,'rgba(220,255,220,'+(0.85*a)+')');grad.addColorStop(1,'rgba(100,180,100,0)');ctx.fillStyle=grad;ctx.beginPath();ctx.arc(gh.x,gh.y,50,0,7);ctx.fill();}for(var oi=0;oi<orbs.length;oi++){var o=orbs[oi];if(Math.hypot(o.x-cx,o.y-cy)<EFF.cameraRadius){var oa=o.life/o.max;ctx.fillStyle='rgba(180,255,255,'+(oa*0.9)+')';ctx.beginPath();ctx.arc(o.x,o.y,6,0,7);ctx.fill();}}ctx.restore();ctx.strokeStyle='#4aff4a';ctx.lineWidth=3;ctx.strokeRect(vx+1.5,vy+1.5,vw-3,vh-3);var camRoom=roomAt(cameraEq.x,cameraEq.y);ctx.fillStyle='#4aff4a';ctx.font='bold 14px monospace';ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText('CAM · '+(camRoom?camRoom.n:'—')+' · T'+tierOf('camera'),vx+12,vy+10);ctx.fillStyle='#4aff4a';ctx.font='11px monospace';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('C — след. · V — выкл.',W/2,vy+vh-12);}
 function renderMapFull(){ctx.fillStyle='#03040a';ctx.fillRect(0,0,W,H);var padX=90,padY=120,s=Math.min((W-padX*2)/WORLD_W,(H-padY*2)/WORLD_H),ox=(W-WORLD_W*s)/2,oy=(H-WORLD_H*s)/2;function X(x){return ox+x*s;}function Y(y){return oy+y*s;}ctx.fillStyle='#c77dff';ctx.font='bold 22px "Segoe UI", sans-serif';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('🗺 КАРТА',W/2,26);for(var y=0;y<MAP_H;y++)for(var x=0;x<MAP_W;x++){var t=map[y][x],px=X(x*TILE),py=Y(y*TILE),pw=TILE*s,ph=TILE*s;if(t==='#'){ctx.fillStyle='#242433';ctx.fillRect(px,py,pw+.5,ph+.5);}else if(t==='+'){ctx.fillStyle='#5a3a1a';ctx.fillRect(px,py,pw+.5,ph+.5);}else{ctx.fillStyle='#0e0e18';ctx.fillRect(px,py,pw+.5,ph+.5);}}for(var ri=0;ri<ROOMS.length;ri++){var r=ROOMS[ri],rx=X(r.x1*TILE),ry=Y(r.y1*TILE),rw=(r.x2-r.x1+1)*TILE*s,rh=(r.y2-r.y1+1)*TILE*s,isG=ghostRoomKnown&&r===ROOMS[gh.room];if(isG){ctx.fillStyle='rgba(160,90,230,.30)';ctx.fillRect(rx,ry,rw,rh);}ctx.font='bold 11px "Segoe UI"';ctx.fillStyle=isG?'#e0c0ff':'#8a90a8';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(r.n,X((r.x1+r.x2+1)/2*TILE),Y((r.y1+r.y2+1)/2*TILE));}ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillStyle='#6a5f8a';ctx.font='11px "Segoe UI"';ctx.fillText('K — закрыть',W/2,H-24);}
 
-/* ===== ВВОД ===== */
 document.addEventListener('keydown',function(e){
   var k=e.key?e.key.toLowerCase():'';
   var isCheat=(e.code==='KeyC'&&e.ctrlKey&&e.shiftKey)||e.code==='F10';
@@ -916,7 +924,6 @@ c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect();mouse
 c.addEventListener('mousedown',function(e){if(!running||e.button!==0||mapOpen||journalOpen)return;var r=c.getBoundingClientRect();mouseX=e.clientX-r.left;mouseY=e.clientY-r.top;if(gameMode==='ghost'){ghostThrow();return;}if(gameMode==='investigator'){if(handleWorldClick())return;}});
 c.addEventListener('contextmenu',function(e){e.preventDefault();});
 
-/* ===== МЕНЮ / МАГАЗИН / СТАРТ ===== */
 function pickMode(mode){gameMode=mode;var mg=document.getElementById('modeGhost'),mi=document.getElementById('modeInv');if(mg)mg.classList.toggle('sel',mode==='ghost');if(mi)mi.classList.toggle('sel',mode==='investigator');updateStartButton();var ggEl=document.getElementById('gg');if(ggEl){var cards=ggEl.querySelectorAll('.gc');for(var i=0;i<cards.length;i++){if(mode==='ghost'&&selectedGhost&&GHOSTS[i]===selectedGhost)cards[i].classList.add('selected');else cards[i].classList.remove('selected');}}var hintEl=document.getElementById('ghostPickHint');if(hintEl){if(mode==='ghost'){hintEl.style.display='block';hintEl.textContent=selectedGhost?('▼ Выбран: '+selectedGhost.rus):'▼ Выберите призрака';}else hintEl.style.display='none';}}
 function pickDiff(n){evidenceCount=n;['diff3','diff2','diff1'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.toggle('sel',(id==='diff3'&&n===3)||(id==='diff2'&&n===2)||(id==='diff1'&&n===1));});updateStartButton();}
 function updateStartButton(){var b=document.getElementById('btnStart');if(!b)return;var suff=evidenceCount===3?' (3 ул.)':(evidenceCount===2?' (2 ул.)':' (1 ул.)');if(gameMode==='ghost')b.textContent='НАЧАТЬ: '+(selectedGhost?selectedGhost.rus.toUpperCase():'СЛУЧАЙНЫЙ')+suff;else b.textContent='НАЧАТЬ ЗА ИСКАТЕЛЯ'+suff;}
@@ -953,7 +960,8 @@ function initMenuUI(){
   bind('modeInv',function(){pickMode('investigator');});
   bind('modeMpGhost',function(){showMultiplayerMenu('ghost-mp');});
   bind('modeMpInv',function(){showMultiplayerMenu('inv-mp');});
-  bind('lobbyClose',function(){closeLobby();});
+  /* === ФИКС: leaveRoom вместо closeLobby — осознанный выход === */
+  bind('lobbyClose',function(){leaveRoom();});
   bind('diff3',function(){pickDiff(3);});
   bind('diff2',function(){pickDiff(2);});
   bind('diff1',function(){pickDiff(1);});
